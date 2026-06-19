@@ -798,6 +798,18 @@
 <footer>
   Hecho con HTML puro · <a href="#inicio">Volver arriba ↑</a>
 </footer>
+ // Copiar email al portapapeles
+  function copiarEmail(btn) {
+    const email = "carabalidani31@gmail.com";
+    navigator.clipboard.writeText(email).then(() => {
+      const label = btn.querySelector('.cl-label');
+      const originalText = label.textContent;
+      label.textContent = "¡Copiado!";
+      setTimeout(() => { label.textContent = originalText; }, 1800);
+    });
+  }
+
+  // NAV shrink on scroll
 
 <script>
   // NAV shrink on scroll
