@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Daniel Carabali — Portafolio de Análisis de Datos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0D1117;
+    --surface: #161B22;
+    --surface2: #1C2333;
+    --accent: #2563EB;
+    --accent-light: #3B82F6;
+    --accent-glow: rgba(37,99,235,0.25);
+    --text: #E2E8F0;
+    --text-muted: #64748B;
+    --text-dim: #94A3B8;
+    --border: rgba(255,255,255,0.07);
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 6%;
+    background: rgba(13,17,23,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    transition: padding .3s;
+  }
+  nav.scrolled { padding: 12px 6%; }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -.5px;
+  }
+  .nav-logo span { color: var(--accent-light); }
+
+  .nav-links { display: flex; gap: 32px; list-style: none; align-items: center; }
+  .nav-links a {
+    color: var(--text-dim); text-decoration: none;
+    font-size: .875rem; font-weight: 500;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    background: var(--accent); color: #fff !important;
+    padding: 8px 20px; border-radius: 8px;
+    font-weight: 600 !important;
+    transition: background .2s, transform .15s !important;
+  }
+  .nav-cta:hover { background: var(--accent-light) !important; transform: translateY(-1px); }
+
+  .nav-toggle {
+    display: none; flex-direction: column; gap: 5px;
+    background: none; border: none; cursor: pointer; padding: 4px;
+  }
+  .nav-toggle span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
+
+  /* ── HERO ── */
+  #inicio {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 120px 6% 80px;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black, transparent);
+  }
+
+  .hero-blob {
+    position: absolute; width: 700px; height: 500px;
+    background: radial-gradient(ellipse, var(--accent-glow), transparent 70%);
+    top: 10%; left: -100px; z-index: 0;
+    animation: blobdrift 10s ease-in-out infinite alternate;
+  }
+  @keyframes blobdrift {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(60px, 40px) scale(1.1); }
+  }
+
+  .hero-content { position: relative; z-index: 1; max-width: 780px; }
+
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(37,99,235,.15); border: 1px solid rgba(37,99,235,.4);
+    color: var(--accent-light); border-radius: 999px;
+    padding: 6px 16px; font-size: .8rem; font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent-light);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity:1; transform: scale(1); }
+    50% { opacity:.4; transform: scale(1.4); }
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5.6vw, 4rem);
+    font-weight: 700; line-height: 1.1;
+    letter-spacing: -1.5px; margin-bottom: 24px;
+  }
+  .hero-title em { font-style: normal; color: var(--accent-light); }
+
+  .hero-sub {
+    font-size: 1.1rem; color: var(--text-dim);
+    max-width: 560px; margin-bottom: 44px; line-height: 1.7;
+  }
+
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 13px 28px; border-radius: 10px;
+    font-family: var(--font-body); font-size: .9rem; font-weight: 600;
+    cursor: pointer; text-decoration: none; border: none;
+    transition: transform .15s, background .2s, box-shadow .2s;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary {
+    background: var(--accent); color: #fff;
+    box-shadow: 0 4px 24px var(--accent-glow);
+  }
+  .btn-primary:hover { background: var(--accent-light); box-shadow: 0 6px 32px var(--accent-glow); }
+  .btn-ghost {
+    background: transparent; color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { color: var(--text); border-color: rgba(255,255,255,.2); background: var(--surface); }
+
+  .hero-stats {
+    display: flex; gap: 48px; margin-top: 72px;
+    padding-top: 48px; border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2rem; font-weight: 700; color: var(--text);
+  }
+  .stat-label { font-size: .8rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── SECTIONS SHARED ── */
+  section { padding: 100px 6%; }
+
+  .section-eyebrow {
+    font-size: .75rem; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--accent-light);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700; line-height: 1.15;
+    letter-spacing: -.5px; margin-bottom: 16px;
+  }
+  .section-sub {
+    color: var(--text-dim); font-size: 1rem;
+    max-width: 560px; line-height: 1.7; margin-bottom: 60px;
+  }
+
+  /* reveal on scroll */
+  .reveal {
+    opacity: 0; transform: translateY(32px);
+    transition: opacity .65s ease, transform .65s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ── ACERCA DE ── */
+  #sobre {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+  }
+  .about-img-wrap {
+    position: relative;
+    display: flex; justify-content: center; align-items: center;
+  }
+  .about-avatar {
+    width: 280px; height: 280px; border-radius: 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 12px;
+    font-size: 5rem; position: relative; z-index: 1;
+    overflow: hidden;
+  }
+  .about-avatar img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; z-index: 1; }
+  .about-avatar::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(37,99,235,.08), transparent 60%);
+    z-index: 2;
+  }
+  .about-avatar-label {
+    font-size: .8rem; color: var(--text-muted); font-weight: 500;
+    position: relative; z-index: 3;
+  }
+  .about-ring {
+    position: absolute; width: 320px; height: 320px; border-radius: 24px;
+    border: 1px solid rgba(37,99,235,.25); z-index: 0;
+    animation: ringgrow 3s ease-in-out infinite alternate;
+  }
+  @keyframes ringgrow {
+    from { transform: scale(1); opacity:.6; }
+    to   { transform: scale(1.05); opacity:.2; }
+  }
+
+  .about-text p { color: var(--text-dim); line-height: 1.8; margin-bottom: 20px; }
+
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px; margin-top: 32px;
+  }
+  .skill-chip {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px;
+    font-size: .8rem; font-weight: 500; color: var(--text-dim);
+    display: flex; align-items: center; gap: 8px;
+    transition: border-color .2s, color .2s;
+  }
+  .skill-chip:hover { border-color: var(--accent); color: var(--text); }
+  .skill-chip .dot {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+    background: var(--accent-light);
+  }
+
+  /* ── PROYECTOS ── */
+  #proyectos { background: var(--bg); }
+
+  .projects-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+    gap: 24px;
+  }
+
+  .project-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    transition: border-color .25s, transform .25s, box-shadow .25s;
+    cursor: default;
+    display: flex; flex-direction: column;
+  }
+  .project-card:hover {
+    border-color: rgba(37,99,235,.5);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,.4), 0 0 0 1px rgba(37,99,235,.15);
+  }
+
+  .card-preview {
+    position: relative; height: 200px; overflow: hidden;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .card-preview img {
+    width: 100%; height: 100%; object-fit: cover; object-position: top;
+    display: block; transition: transform .4s ease;
+  }
+  .project-card:hover .card-preview img { transform: scale(1.04); }
+  .card-preview::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(13,17,23,.85) 100%);
+  }
+  .card-preview-label {
+    position: absolute; left: 16px; bottom: 12px; z-index: 2;
+    font-size: .7rem; font-weight: 600; color: var(--text-dim);
+    letter-spacing: .04em; text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .card-preview-label .live-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: #10B981;
+  }
+
+  .card-body { padding: 24px; display: flex; flex-direction: column; flex: 1; }
+
+  .card-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+  .tag {
+    font-size: .7rem; font-weight: 600; padding: 4px 10px; border-radius: 999px;
+    background: rgba(37,99,235,.12); color: var(--accent-light);
+    border: 1px solid rgba(37,99,235,.3);
+  }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem; font-weight: 600; margin-bottom: 8px;
+  }
+  .card-desc { font-size: .875rem; color: var(--text-dim); line-height: 1.65; margin-bottom: 14px; }
+
+  .card-highlight {
+    font-size: .8rem; color: var(--text-dim); line-height: 1.6;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; margin-bottom: 20px;
+  }
+  .card-highlight strong { color: var(--text); }
+
+  .card-links { display: flex; gap: 12px; margin-top: auto; }
+  .card-link {
+    font-size: .8rem; font-weight: 600; color: var(--accent-light);
+    text-decoration: none; display: flex; align-items: center; gap: 5px;
+    transition: color .2s;
+  }
+  .card-link:hover { color: var(--text); }
+  .card-link.disabled {
+    color: var(--text-muted); cursor: default;
+  }
+  .card-link.disabled:hover { color: var(--text-muted); }
+
+  /* ── EXPERIENCIA ── */
+  #experiencia {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: 0; top: 6px; bottom: 6px;
+    width: 2px; background: var(--border);
+  }
+
+  .timeline-item {
+    position: relative; margin-bottom: 52px;
+    padding-left: 28px;
+  }
+  .timeline-item:last-child { margin-bottom: 0; }
+  .timeline-item::before {
+    content: ''; position: absolute;
+    left: -34px; top: 5px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--accent);
+    box-shadow: 0 0 0 4px rgba(37,99,235,.2);
+    transition: box-shadow .2s;
+  }
+  .timeline-item:hover::before { box-shadow: 0 0 0 8px rgba(37,99,235,.15); }
+
+  .timeline-date {
+    font-size: .75rem; color: var(--accent-light); font-weight: 600;
+    text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px;
+  }
+  .timeline-role {
+    font-family: var(--font-display); font-size: 1.1rem;
+    font-weight: 600; margin-bottom: 4px;
+  }
+  .timeline-company {
+    font-size: .875rem; color: var(--text-muted); margin-bottom: 12px;
+  }
+  .timeline-desc {
+    font-size: .875rem; color: var(--text-dim); line-height: 1.7;
+  }
+  .timeline-desc ul { margin-top: 8px; padding-left: 18px; }
+  .timeline-desc li { margin-bottom: 4px; }
+  .timeline-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+  /* ── CONTACTO ── */
+  #contacto { background: var(--bg); text-align: center; }
+
+  .contact-card {
+    max-width: 560px; margin: 0 auto;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 52px 44px;
+  }
+
+  .contact-icon {
+    width: 64px; height: 64px; border-radius: 16px;
+    background: rgba(37,99,235,.12); border: 1px solid rgba(37,99,235,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; margin: 0 auto 28px;
+  }
+
+  .contact-links { display: flex; flex-direction: column; gap: 12px; margin-top: 32px; }
+  .contact-link {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px;
+    text-decoration: none; color: var(--text-dim);
+    font-size: .9rem; font-weight: 500;
+    transition: border-color .2s, color .2s, transform .15s;
+  }
+  .contact-link:hover { border-color: var(--accent); color: var(--text); transform: translateX(4px); }
+  .contact-link .cl-icon { font-size: 1.2rem; }
+  .contact-link .cl-label { color: var(--text-muted); font-size: .75rem; }
+  .contact-link .cl-value { font-weight: 600; color: inherit; }
+  .contact-link-text { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center; padding: 28px 6%;
+    border-top: 1px solid var(--border);
+    font-size: .8rem; color: var(--text-muted);
+  }
+  footer a { color: var(--accent-light); text-decoration: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-stats { gap: 28px; flex-wrap: wrap; }
+    .projects-grid { grid-template-columns: 1fr; }
+    nav { padding: 14px 5%; }
+    .nav-links {
+      position: fixed; top: 60px; left: 0; right: 0;
+      background: var(--bg); border-bottom: 1px solid var(--border);
+      flex-direction: column; align-items: flex-start;
+      padding: 20px 6%; gap: 18px;
+      transform: translateY(-110%); opacity: 0;
+      transition: transform .25s ease, opacity .25s ease;
+      pointer-events: none;
+    }
+    .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    .nav-toggle { display: flex; }
+    section { padding: 80px 5%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#inicio" class="nav-logo">daniel<span>.</span>carabali</a>
+  <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#sobre">Sobre mí</a></li>
+    <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#experiencia">Experiencia</a></li>
+    <li><a href="#contacto" class="nav-cta">Contacto</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="inicio">
+  <div class="hero-grid"></div>
+  <div class="hero-blob"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Disponible para trabajar</div>
+    <h1 class="hero-title">
+      Convierto datos<br>en <em>decisiones</em> claras
+    </h1>
+    <p class="hero-sub">
+      Soy Daniel Carabali, analista de datos especializado en Power BI. Diseño tableros
+      que centralizan información operativa, automatizan reportes y respaldan decisiones
+      con evidencia, no con intuición.
+    </p>
+    <div class="hero-actions">
+      <a href="#proyectos" class="btn btn-primary">
+        Ver proyectos
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#contacto" class="btn btn-ghost">Hablemos</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-num">4</div>
+        <div class="stat-label">Tableros desarrollados</div>
+      </div>
+      <div>
+        <div class="stat-num">DAX</div>
+        <div class="stat-label">Modelado avanzado</div>
+      </div>
+      <div>
+        <div class="stat-num">100%</div>
+        <div class="stat-label">Automatización de reportes</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE MÍ -->
+<section id="sobre">
+  <div class="about-grid">
+    <div class="about-img-wrap reveal">
+      <div class="about-ring"></div>
+      <div class="about-avatar">
+        <!-- Reemplaza por tu foto real: <img src="img/foto-perfil.jpg" alt="Daniel Carabali"> -->
+        📊
+        <span class="about-avatar-label">Tu foto aquí</span>
+      </div>
+    </div>
+    <div class="about-text reveal">
+      <p class="section-eyebrow">Sobre mí</p>
+      <h2 class="section-title">Analista con mentalidad de negocio</h2>
+      <p>
+        Soy <strong>Daniel Carabali</strong>, analista de datos enfocado en convertir información
+        operativa dispersa en tableros de Power BI que de verdad se usan para tomar decisiones.
+        Mi trabajo combina modelado de datos, DAX y automatización con Power Automate para
+        eliminar el seguimiento manual en Excel.
+      </p>
+      <p>
+        He desarrollado soluciones de extremo a extremo: desde consolidar fuentes de datos
+        dispersas y construir modelos relacionales, hasta diseñar KPIs que responden preguntas
+        reales del negocio y automatizar la distribución de reportes por correo.
+      </p>
+      <p>
+        Me interesa especialmente el análisis que lleva a una decisión concreta — como
+        redefinir un acuerdo de nivel de servicio con datos en mano, no solo mostrar gráficos.
+      </p>
+      <div class="skills-grid">
+        <div class="skill-chip"><span class="dot"></span>Power BI</div>
+        <div class="skill-chip"><span class="dot"></span>DAX</div>
+        <div class="skill-chip"><span class="dot"></span>Power Query</div>
+        <div class="skill-chip"><span class="dot"></span>Power Automate</div>
+        <div class="skill-chip"><span class="dot"></span>SQL</div>
+        <div class="skill-chip"><span class="dot"></span>Excel</div>
+        <div class="skill-chip"><span class="dot"></span>SharePoint</div>
+        <div class="skill-chip"><span class="dot"></span>Modelado de datos</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROYECTOS -->
+<section id="proyectos">
+  <div class="reveal">
+    <p class="section-eyebrow">Proyectos</p>
+    <h2 class="section-title">Tableros que resolvieron problemas reales</h2>
+    <p class="section-sub">
+      Cada proyecto incluye un video de funcionamiento del tablero, ya que Power BI
+      requiere una licencia paga de Microsoft para publicar en la web.
+    </p>
+  </div>
+
+  <div class="projects-grid">
+
+    <!-- Proyecto 1: PAM -->
+    <div class="project-card reveal">
+      <div class="card-preview">
+        <img src="img/proyecto-pam.png" alt="Tablero Plan de Aseguramiento Metrológico en Power BI">
+        <div class="card-preview-label"><span class="live-dot"></span>Tablero real en Power BI</div>
+      </div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="tag">Power BI</span>
+          <span class="tag">Power Automate</span>
+          <span class="tag">DAX</span>
+          <span class="tag">Power Query</span>
+        </div>
+        <div class="card-title">Plan de Aseguramiento Metrológico (PAM)</div>
+        <p class="card-desc">
+          Sistema integral para centralizar el control de calibraciones de equipos,
+          monitorear el cumplimiento mensual y automatizar reportes y alertas por correo.
+        </p>
+        <div class="card-highlight">
+          <strong>Antes:</strong> seguimiento manual en Excel, sin visibilidad del cumplimiento.<br>
+          <strong>Después:</strong> reportes automáticos por área y alertas de equipos próximos a vencer.
+        </div>
+        <div class="card-links">
+          <a href="#" class="card-link disabled" title="Próximamente">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Video demo — próximamente
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proyecto 2: Capacidad instalada -->
+    <div class="project-card reveal">
+      <div class="card-preview">
+        <img src="img/proyecto-capacidad.png" alt="Tablero de Capacidad Instalada del laboratorio metrológico en Power BI">
+        <div class="card-preview-label"><span class="live-dot"></span>Tablero real en Power BI</div>
+      </div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="tag">Power BI</span>
+          <span class="tag">DAX</span>
+          <span class="tag">Power Query</span>
+        </div>
+        <div class="card-title">Capacidad Instalada del Laboratorio Metrológico</div>
+        <p class="card-desc">
+          Monitoreo de la utilización de la capacidad operativa por magnitud y por técnico,
+          con mapas de calor para detectar estacionalidad en la demanda.
+        </p>
+        <div class="card-highlight">
+          <strong>Hallazgo clave:</strong> permitió redistribuir carga operativa hacia meses
+          de menor demanda y detectar magnitudes con capacidad disponible para crecer.
+        </div>
+        <div class="card-links">
+          <a href="#" class="card-link disabled" title="Próximamente">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Video demo — próximamente
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proyecto 3: Ordenes vencidas -->
+    <div class="project-card reveal">
+      <div class="card-preview">
+        <img src="img/proyecto-ordenes.png" alt="Tablero de Seguimiento de Órdenes Vencidas en Power BI">
+        <div class="card-preview-label"><span class="live-dot"></span>Tablero real en Power BI</div>
+      </div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="tag">Power BI</span>
+          <span class="tag">DAX</span>
+          <span class="tag">Análisis exploratorio</span>
+        </div>
+        <div class="card-title">Seguimiento de Órdenes Vencidas (ANS)</div>
+        <p class="card-desc">
+          Análisis de cumplimiento del Acuerdo de Nivel de Servicio del laboratorio,
+          identificando causas operativas detrás de los retrasos en la entrega de equipos.
+        </p>
+        <div class="card-highlight">
+          <strong>Resultado:</strong> el análisis respaldó la redefinición del ANS de 7 días
+          calendario a 5 días hábiles, reduciendo las órdenes vencidas.
+        </div>
+        <div class="card-links">
+          <a href="#" class="card-link disabled" title="Próximamente">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Video demo — próximamente
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proyecto 4: Parque fotovoltaico - Gemelo digital -->
+    <div class="project-card reveal">
+      <div class="card-preview">
+        <img src="img/proyecto-fotovoltaico.png" alt="Tablero Gemelo Digital de Parque Fotovoltaico en Power BI">
+        <div class="card-preview-label"><span class="live-dot"></span>Tablero real en Power BI</div>
+      </div>
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="tag">Power BI</span>
+          <span class="tag">DAX</span>
+          <span class="tag">Simulación de datos</span>
+        </div>
+        <div class="card-title">Parque Fotovoltaico — Gemelo Digital</div>
+        <p class="card-desc">
+          Tablero de monitoreo tipo gemelo digital para un parque solar simulado, con
+          seguimiento del estado de cada panel por cadena (óptimo, degradado, defectuoso
+          o fuera de servicio) y KPIs de potencia, eficiencia y temperatura.
+        </p>
+        <div class="card-highlight">
+          <strong>Enfoque:</strong> visualización de estado por cadena de paneles con
+          semaforización, pensada para detectar fallas operativas a nivel granular.
+        </div>
+        <div class="card-links">
+          <a href="#" class="card-link disabled" title="Próximamente">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            Video demo — próximamente
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPERIENCIA -->
+<section id="experiencia">
+  <div class="reveal">
+    <p class="section-eyebrow">Experiencia</p>
+    <h2 class="section-title">Trayectoria profesional</h2>
+    <p class="section-sub">Roles y proyectos donde he aportado valor a través de datos.</p>
+  </div>
+
+  <div class="timeline reveal">
+
+    <div class="timeline-item">
+      <div class="timeline-date">Actualidad</div>
+      <div class="timeline-role">Analista de Datos — Power BI</div>
+      <div class="timeline-company">[Nombre de la empresa]</div>
+      <div class="timeline-desc">
+        Diseño e implementación de tableros de control para áreas de calidad y aseguramiento
+        metrológico, incluyendo:
+        <ul>
+          <li>Modelado de datos relacional y medidas DAX para indicadores de cumplimiento</li>
+          <li>Automatización de reportes y alertas con Power Automate</li>
+          <li>Consolidación de múltiples fuentes operativas en Power Query</li>
+          <li>Análisis que respaldó la redefinición de un Acuerdo de Nivel de Servicio</li>
+        </ul>
+      </div>
+      <div class="timeline-tags">
+        <span class="tag">Power BI</span>
+        <span class="tag">DAX</span>
+        <span class="tag">Power Automate</span>
+        <span class="tag">SharePoint</span>
+      </div>
+    </div>
+
+    <!-- Espacio para más experiencia / formación según tu hoja de vida -->
+    <div class="timeline-item">
+      <div class="timeline-date">Formación</div>
+      <div class="timeline-role">[Tu programa académico]</div>
+      <div class="timeline-company">[Tu institución]</div>
+      <p class="timeline-desc">
+        Agrega aquí tu formación académica relevante (ingeniería, tecnología o carrera afín)
+        para reforzar tu perfil analítico.
+      </p>
+      <div class="timeline-tags">
+        <span class="tag">SQL</span>
+        <span class="tag">Excel</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto">
+  <div class="contact-card reveal">
+    <div class="contact-icon">👋</div>
+    <p class="section-eyebrow" style="text-align:center">Contacto</p>
+    <h2 class="section-title">¿Hablamos?</h2>
+    <p style="color:var(--text-dim); line-height:1.7; margin-top: -8px;">
+      Estoy abierto a oportunidades en análisis de datos y desarrollo de soluciones en Power BI.
+      Escríbeme y respondo pronto.
+    </p>
+    <div class="contact-links">
+      <a href="mailto:tuemail@ejemplo.com" class="contact-link">
+        <span class="cl-icon">✉️</span>
+        <span class="contact-link-text">
+          <span class="cl-label">Email</span>
+          <span class="cl-value">tuemail@ejemplo.com</span>
+        </span>
+      </a>
+      <a href="https://www.linkedin.com/in/daniel-carabali2004/" target="_blank" class="contact-link">
+        <span class="cl-icon">💼</span>
+        <span class="contact-link-text">
+          <span class="cl-label">LinkedIn</span>
+          <span class="cl-value">linkedin.com/in/daniel-carabali2004</span>
+        </span>
+      </a>
+      <a href="https://github.com/tuusuario" target="_blank" class="contact-link">
+        <span class="cl-icon">🐙</span>
+        <span class="contact-link-text">
+          <span class="cl-label">GitHub</span>
+          <span class="cl-value">github.com/tuusuario</span>
+        </span>
+      </a>
+    </div>
+    <a href="mailto:tuemail@ejemplo.com" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:28px;">
+      Enviar mensaje
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<footer>
+  Hecho con HTML puro · <a href="#inicio">Volver arriba ↑</a>
+</footer>
+
+<script>
+  // NAV shrink on scroll
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Mobile nav toggle
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Animate stat numbers on scroll
+  const stats = document.querySelectorAll('.stat-num');
+  const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.animation = 'none';
+        entry.target.offsetHeight; // reflow
+        entry.target.style.animation = 'countIn .6s ease forwards';
+        statsObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  stats.forEach(el => statsObserver.observe(el));
+</script>
+
+<style>
+  @keyframes countIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: none; }
+  }
+</style>
+
+</body>
+</html>
