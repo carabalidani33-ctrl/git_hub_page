@@ -426,6 +426,117 @@
   }
   footer a { color: var(--accent-light); text-decoration: none; }
 
+  /* ── PROJECT CARD AS TRIGGER ── */
+  .project-card { cursor: pointer; }
+  .project-card:focus-visible {
+    outline: 2px solid var(--accent-light); outline-offset: 2px;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(5,7,10,.75);
+    backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    opacity: 0; visibility: hidden;
+    transition: opacity .25s ease, visibility .25s ease;
+  }
+  .modal-overlay.open { opacity: 1; visibility: visible; }
+
+  .modal-box {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; max-width: 760px; width: 100%;
+    max-height: 86vh; overflow-y: auto;
+    transform: translateY(24px) scale(.98);
+    transition: transform .3s ease;
+    box-shadow: 0 24px 80px rgba(0,0,0,.5);
+  }
+  .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+
+  .modal-box::-webkit-scrollbar { width: 8px; }
+  .modal-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+
+  .modal-media {
+    position: relative; height: 0; padding-bottom: 56.25%;
+    background: #000; overflow: hidden;
+    border-radius: 20px 20px 0 0;
+  }
+  .modal-media iframe, .modal-media img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    border: none; object-fit: cover;
+  }
+  .modal-video-placeholder {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 10px;
+    background: var(--surface2); color: var(--text-muted);
+    font-size: .85rem; text-align: center; padding: 0 20px;
+  }
+  .modal-video-placeholder svg { opacity: .5; }
+
+  .modal-close {
+    position: absolute; top: 16px; right: 16px; z-index: 5;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(13,17,23,.7); border: 1px solid rgba(255,255,255,.15);
+    color: #fff; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: background .2s, transform .15s;
+  }
+  .modal-close:hover { background: rgba(13,17,23,.95); transform: rotate(90deg); }
+
+  .modal-body { padding: 36px 40px 44px; }
+
+  .modal-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: 1.6rem; font-weight: 700; margin-bottom: 24px;
+    letter-spacing: -.3px;
+  }
+
+  .modal-section { margin-bottom: 28px; }
+  .modal-section:last-child { margin-bottom: 0; }
+  .modal-section-label {
+    font-size: .72rem; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--accent-light);
+    margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+  }
+  .modal-section-label::before {
+    content: ''; width: 14px; height: 2px; background: var(--accent-light);
+  }
+  .modal-section p {
+    font-size: .9rem; color: var(--text-dim); line-height: 1.75;
+  }
+  .modal-section ul {
+    padding-left: 18px; margin-top: 6px;
+  }
+  .modal-section li {
+    font-size: .9rem; color: var(--text-dim); line-height: 1.7;
+    margin-bottom: 5px;
+  }
+
+  .modal-kpi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+    gap: 10px; margin-top: 12px;
+  }
+  .modal-kpi {
+    background: var(--bg); border: 1px solid var(--border); border-radius: 10px;
+    padding: 12px 14px; font-size: .82rem; color: var(--text-dim);
+  }
+
+  .modal-result-box {
+    background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.25);
+    border-radius: 12px; padding: 16px 18px;
+  }
+  .modal-result-box p { color: var(--text); }
+  .modal-result-box strong { color: #34D399; }
+
+  body.modal-locked { overflow: hidden; }
+
+  @media (max-width: 600px) {
+    .modal-body { padding: 24px 22px 32px; }
+    .modal-title { font-size: 1.3rem; }
+  }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     .about-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -565,7 +676,7 @@
   <div class="projects-grid">
 
     <!-- Proyecto 1: PAM -->
-    <div class="project-card reveal">
+    <div class="project-card reveal" onclick="abrirModal('pam')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')abrirModal('pam')">
       <div class="card-preview">
         <img src="img/proyecto-pam.png" alt="Tablero Plan de Aseguramiento Metrológico en Power BI">
         <div class="card-preview-label"><span class="live-dot"></span>Tablero real en Power BI</div>
@@ -587,16 +698,16 @@
           <strong>Después:</strong> reportes automáticos por área y alertas de equipos próximos a vencer.
         </div>
         <div class="card-links">
-          <a href="https://youtu.be/x_-Dqs0E4Ew" target="_blank" class="card-link">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Presiona para ver el video instructivo del tablero
-          </a>
+          <span class="card-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Ver detalle completo
+          </span>
         </div>
       </div>
     </div>
 
     <!-- Proyecto 2: Capacidad instalada -->
-    <div class="project-card reveal">
+    <div class="project-card reveal" onclick="abrirModal('capacidad')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')abrirModal('capacidad')">
       <div class="card-preview">
         <img src="img/proyecto-capacidad.png" alt="Tablero de Capacidad Instalada del laboratorio metrológico en Power BI">
         <div class="card-preview-label"><span class="live-dot"></span>Tablero real en Power BI</div>
@@ -617,16 +728,16 @@
           de menor demanda y detectar magnitudes con capacidad disponible para crecer.
         </div>
         <div class="card-links">
-          <a href="https://youtu.be/YexllMbLJvE" target="_blank" class="card-link">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Presiona para ver el video instructivo del tablero
-          </a>
+          <span class="card-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Ver detalle completo
+          </span>
         </div>
       </div>
     </div>
 
     <!-- Proyecto 3: Ordenes vencidas -->
-    <div class="project-card reveal">
+    <div class="project-card reveal" onclick="abrirModal('ordenes')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')abrirModal('ordenes')">
       <div class="card-preview">
         <img src="img/proyecto-ordenes.png" alt="Tablero de Seguimiento de Órdenes Vencidas en Power BI">
         <div class="card-preview-label"><span class="live-dot"></span>Tablero real en Power BI</div>
@@ -647,16 +758,16 @@
           calendario a 5 días hábiles, reduciendo las órdenes vencidas.
         </div>
         <div class="card-links">
-          <a href="https://youtu.be/agX1eMFihMQ" target="_blank" class="card-link">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Presiona para ver el video instructivo del tablero
-          </a>
+          <span class="card-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Ver detalle completo
+          </span>
         </div>
       </div>
     </div>
 
     <!-- Proyecto 4: Parque fotovoltaico - Gemelo digital -->
-    <div class="project-card reveal">
+    <div class="project-card reveal" onclick="abrirModal('fotovoltaico')" role="button" tabindex="0" onkeydown="if(event.key==='Enter')abrirModal('fotovoltaico')">
       <div class="card-preview">
         <img src="img/proyecto-fotovoltaico.png" alt="Tablero Gemelo Digital de Parque Fotovoltaico en Power BI">
         <div class="card-preview-label"><span class="live-dot"></span>Tablero real en Power BI</div>
@@ -678,10 +789,10 @@
           semaforización, pensada para detectar fallas operativas a nivel granular.
         </div>
         <div class="card-links">
-          <a href="https://youtu.be/jx61ftPgvEw" target="_blank" class="card-link">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            Presiona para ver el video instructivo del tablero
-          </a>
+          <span class="card-link">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Ver detalle completo
+          </span>
         </div>
       </div>
     </div>
@@ -798,7 +909,232 @@
 <footer>
   Hecho con HTML puro · <a href="#inicio">Volver arriba ↑</a>
 </footer>
- // Copiar email al portapapeles
+
+<!-- ══ MODALES DE PROYECTO ══ -->
+
+<!-- Modal: PAM -->
+<div class="modal-overlay" id="modal-pam" onclick="if(event.target===this)cerrarModal()">
+  <div class="modal-box">
+    <div class="modal-media">
+      <iframe src="https://www.youtube.com/embed/x_-Dqs0E4Ew" title="Video demo PAM" allowfullscreen loading="lazy"></iframe>
+      <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-tags">
+        <span class="tag">Power BI</span><span class="tag">Power Automate</span>
+        <span class="tag">DAX</span><span class="tag">Power Query</span><span class="tag">SharePoint</span>
+      </div>
+      <h3 class="modal-title">Plan de Aseguramiento Metrológico (PAM)</h3>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Resumen ejecutivo</div>
+        <p>Sistema integral de seguimiento metrológico construido en Power BI y Power Automate
+        para centralizar el control de calibraciones, monitorear indicadores de cumplimiento y
+        automatizar la generación de reportes y alertas. Permitió consolidar la información
+        histórica de los equipos de medición y reemplazar el seguimiento manual por visibilidad
+        en tiempo real.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-label">El problema</div>
+        <p>El seguimiento se hacía en archivos de Excel actualizados manualmente. Esto generaba
+        dificultad para consolidar el histórico, poca visibilidad del cumplimiento mensual,
+        riesgo de omitir calibraciones próximas a vencer y un alto tiempo invertido solo en
+        armar reportes.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Qué construí</div>
+        <ul>
+          <li>Modelo relacional con tabla de hechos de calibraciones, histórico, calendario y áreas</li>
+          <li>Limpieza en Power Query: estandarización de fechas, normalización de áreas y eliminación de duplicados</li>
+          <li>Medidas DAX para equipos programados, calibrados, pendientes y cumplimiento por área</li>
+          <li>Flujo de Power Automate que envía correos automáticos: alertas el día 25 de cada mes, seguimiento quincenal y reporte de pendientes acumulados el primer día del mes</li>
+        </ul>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Resultado</div>
+        <div class="modal-result-box">
+          <p><strong>Visibilidad en tiempo real</strong> del cumplimiento metrológico, con
+          identificación temprana de equipos en riesgo de vencer y reportes que antes se
+          armaban a mano ahora se distribuyen solos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Capacidad -->
+<div class="modal-overlay" id="modal-capacidad" onclick="if(event.target===this)cerrarModal()">
+  <div class="modal-box">
+    <div class="modal-media">
+      <iframe src="https://www.youtube.com/embed/YexllMbLJvE" title="Video demo Capacidad Instalada" allowfullscreen loading="lazy"></iframe>
+      <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-tags">
+        <span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">Power Query</span>
+      </div>
+      <h3 class="modal-title">Capacidad Instalada del Laboratorio Metrológico</h3>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Resumen ejecutivo</div>
+        <p>Sistema analítico para monitorear y optimizar la capacidad operativa del laboratorio,
+        visualizando la utilización por magnitud y por técnico. Permitió identificar periodos de
+        alta demanda, redistribuir carga operativa y detectar oportunidades de expansión del
+        servicio.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-label">El problema</div>
+        <p>El seguimiento se hacía con reportes manuales y archivos dispersos del sistema OSF,
+        sin forma de saber qué magnitudes operaban por encima de su capacidad, qué técnicos
+        tenían sobrecarga, o en qué meses se concentraba la mayor demanda.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Qué construí</div>
+        <ul>
+          <li>Consolidación de reportes OSF con archivos auxiliares de límites de capacidad por magnitud</li>
+          <li>Modelo analítico relacionando calibraciones, magnitudes, técnicos y fechas</li>
+          <li>Medidas DAX de porcentaje de utilización (capacidad utilizada ÷ capacidad establecida)</li>
+          <li>Mapa de calor de utilización por mes y año para detectar estacionalidad</li>
+        </ul>
+      </div>
+
+      <div class="modal-kpi-grid">
+        <div class="modal-kpi">% de utilización de capacidad</div>
+        <div class="modal-kpi">Distribución de carga por técnico</div>
+        <div class="modal-kpi">Magnitudes con sobrecarga</div>
+        <div class="modal-kpi">Capacidad disponible</div>
+      </div>
+
+      <div class="modal-section" style="margin-top:24px;">
+        <div class="modal-section-label">Resultado</div>
+        <div class="modal-result-box">
+          <p>El mapa de calor permitió <strong>redistribuir la carga operativa</strong> hacia
+          meses de menor demanda y detectar magnitudes con capacidad disponible para crecer
+          el portafolio de servicios.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Ordenes vencidas -->
+<div class="modal-overlay" id="modal-ordenes" onclick="if(event.target===this)cerrarModal()">
+  <div class="modal-box">
+    <div class="modal-media">
+      <iframe src="https://www.youtube.com/embed/agX1eMFihMQ" title="Video demo Órdenes Vencidas" allowfullscreen loading="lazy"></iframe>
+      <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-tags">
+        <span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">Análisis exploratorio</span>
+      </div>
+      <h3 class="modal-title">Seguimiento de Órdenes Vencidas (ANS)</h3>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Resumen ejecutivo</div>
+        <p>Sistema analítico para monitorear el cumplimiento del Acuerdo de Nivel de Servicio
+        (ANS) del laboratorio metrológico, identificando las causas operativas detrás de los
+        retrasos en la entrega de equipos. El análisis terminó respaldando la redefinición
+        formal del ANS.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-label">El problema</div>
+        <p>El laboratorio operaba con un ANS de 7 días calendario, pero presentaba retrasos
+        recurrentes sin que existiera un análisis consolidado que explicara las causas: ¿era
+        carga operativa, días festivos, o factores externos?</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Hipótesis validadas y descartadas</div>
+        <ul>
+          <li><strong>Confirmado:</strong> la sobrecarga operativa coincidía con picos de órdenes vencidas</li>
+          <li><strong>Confirmado:</strong> los días festivos amplificaban los retrasos en semanas de alta carga</li>
+          <li><strong>Confirmado:</strong> había concentración de calibraciones completadas justo en el día 7, el límite del ANS, dejando el proceso vulnerable</li>
+          <li><strong>Descartado:</strong> la jornada reducida de los viernes no era causa significativa — los mapas de calor mostraron que lunes y martes concentraban más órdenes vencidas</li>
+        </ul>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Resultado</div>
+        <div class="modal-result-box">
+          <p>Con base en este análisis se <strong>redefinió el ANS de 7 días calendario a 5
+          días hábiles</strong> (excluyendo fines de semana, festivos y jornadas no operativas),
+          alineando el indicador con la capacidad real del laboratorio y reduciendo las
+          órdenes vencidas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Fotovoltaico -->
+<div class="modal-overlay" id="modal-fotovoltaico" onclick="if(event.target===this)cerrarModal()">
+  <div class="modal-box">
+    <div class="modal-media">
+      <iframe src="https://www.youtube.com/embed/jx61ftPgvEw" title="Video demo Parque Fotovoltaico" allowfullscreen loading="lazy"></iframe>
+      <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-tags">
+        <span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">Simulación de datos</span>
+      </div>
+      <h3 class="modal-title">Parque Fotovoltaico — Gemelo Digital</h3>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Resumen ejecutivo</div>
+        <p>Tablero tipo gemelo digital para un parque solar simulado de 400 paneles distribuidos
+        en 10 cadenas, con seguimiento del estado de cada panel en tiempo real y KPIs operativos
+        de potencia, eficiencia y temperatura.</p>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-label">Enfoque</div>
+        <p>Cada panel se clasifica en uno de cuatro estados — óptimo, degradado, defectuoso o
+        fuera de servicio — y se visualiza con semaforización dentro de su cadena
+        correspondiente, permitiendo detectar fallas operativas a nivel granular sin perder
+        la vista general del parque.</p>
+      </div>
+
+      <div class="modal-kpi-grid">
+        <div class="modal-kpi">Potencia total (MW)</div>
+        <div class="modal-kpi">Eficiencia promedio (%)</div>
+        <div class="modal-kpi">Temperatura promedio</div>
+        <div class="modal-kpi">Estado por cadena y panel</div>
+      </div>
+
+      <div class="modal-section" style="margin-top:24px;">
+        <div class="modal-section-label">Cómo se construyó</div>
+        <p>Este tablero lo desarrollé en conjunto con apoyo de IA generativa para diseñar la
+        lógica de simulación de datos y la estética tipo SCADA, aplicando los mismos principios
+        de modelado y DAX usados en mis otros proyectos de Power BI.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── MODAL DE PROYECTOS ──
+  function abrirModal(id) {
+    const modal = document.getElementById('modal-' + id);
+    if (!modal) return;
+    modal.classList.add('open');
+    document.body.classList.add('modal-locked');
+  }
+  function cerrarModal() {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    document.body.classList.remove('modal-locked');
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') cerrarModal();
+  });
+
+  // Copiar email al portapapeles
   function copiarEmail(btn) {
     const email = "carabalidani31@gmail.com";
     navigator.clipboard.writeText(email).then(() => {
@@ -809,9 +1145,6 @@
     });
   }
 
-  // NAV shrink on scroll
-
-<script>
   // NAV shrink on scroll
   const navbar = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
