@@ -11,18 +11,31 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0D1117;
-    --surface: #161B22;
-    --surface2: #1C2333;
-    --accent: #2563EB;
-    --accent-light: #3B82F6;
-    --accent-glow: rgba(37,99,235,0.25);
-    --text: #E2E8F0;
-    --text-muted: #64748B;
-    --text-dim: #94A3B8;
-    --border: rgba(255,255,255,0.07);
+    --bg: #0B0B0D;
+    --surface: #151517;
+    --surface2: #1C1C20;
+    --accent: #C9A9FF;
+    --accent-light: #DCC6FF;
+    --accent-glow: rgba(201,169,255,0.22);
+    --text: #F2F2F3;
+    --text-muted: #6B6B72;
+    --text-dim: #A0A0A8;
+    --border: rgba(255,255,255,0.08);
     --font-display: 'Space Grotesk', sans-serif;
     --font-body: 'Inter', sans-serif;
+  }
+
+  html[data-theme="light"] {
+    --bg: #FFFFFF;
+    --surface: #FAFAFA;
+    --surface2: #F2F0F5;
+    --accent: #8B5CF6;
+    --accent-light: #A78BFA;
+    --accent-glow: rgba(139,92,246,0.18);
+    --text: #111113;
+    --text-muted: #8A8A92;
+    --text-dim: #55555E;
+    --border: rgba(17,17,19,0.08);
   }
 
   html { scroll-behavior: smooth; }
@@ -34,7 +47,10 @@
     font-size: 16px;
     line-height: 1.6;
     overflow-x: hidden;
+    transition: background .4s ease, color .4s ease;
   }
+
+  *, *::before, *::after { transition: background-color .35s ease, border-color .35s ease, color .35s ease, box-shadow .35s ease; }
 
   /* ── NAV ── */
   nav {
@@ -77,7 +93,26 @@
     display: none; flex-direction: column; gap: 5px;
     background: none; border: none; cursor: pointer; padding: 4px;
   }
+  .nav-right { display: flex; align-items: center; gap: 14px; }
   .nav-toggle span { width: 22px; height: 2px; background: var(--text); border-radius: 2px; }
+
+  .theme-toggle {
+    display: flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text-dim); cursor: pointer; position: relative;
+    overflow: hidden; flex-shrink: 0;
+  }
+  .theme-toggle:hover { color: var(--text); border-color: var(--accent); transform: translateY(-1px); }
+  .theme-toggle .theme-icon {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    transition: transform .45s cubic-bezier(.4,0,.2,1), opacity .35s ease;
+    opacity: 1;
+  }
+  .theme-toggle .icon-moon { opacity: 0; transform: translate(-50%, -50%) rotate(-90deg) scale(.4); }
+  html[data-theme="light"] .theme-toggle .icon-sun { opacity: 0; transform: translate(-50%, -50%) rotate(90deg) scale(.4); }
+  html[data-theme="light"] .theme-toggle .icon-moon { opacity: 1; transform: translate(-50%, -50%) rotate(0deg) scale(1); }
 
   /* ── HERO ── */
   #inicio {
@@ -112,7 +147,7 @@
 
   .hero-badge {
     display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(37,99,235,.15); border: 1px solid rgba(37,99,235,.4);
+    background: rgba(139,92,246,.15); border: 1px solid rgba(139,92,246,.4);
     color: var(--accent-light); border-radius: 999px;
     padding: 6px 16px; font-size: .8rem; font-weight: 600;
     letter-spacing: .04em; text-transform: uppercase;
@@ -142,6 +177,33 @@
   }
 
   .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+  .hero-social { display: flex; gap: 14px; margin-top: 28px; }
+  .hero-social-icon {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-dim); cursor: pointer; text-decoration: none;
+  }
+  .hero-social-icon:hover {
+    color: var(--text); border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px var(--accent-glow);
+  }
+  .hero-social-tip {
+    position: absolute; bottom: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: var(--surface2); color: var(--text);
+    border: 1px solid var(--border);
+    font-size: .7rem; font-weight: 600; white-space: nowrap;
+    padding: 5px 10px; border-radius: 6px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .hero-social-icon:hover .hero-social-tip { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .hero-social-icon.copiado { color: #10B981 !important; border-color: #10B981 !important; }
+  .hero-social-icon.copiado .hero-social-tip { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
@@ -225,7 +287,7 @@
   .about-avatar img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; z-index: 1; }
   .about-avatar::after {
     content: ''; position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(37,99,235,.08), transparent 60%);
+    background: linear-gradient(135deg, rgba(139,92,246,.08), transparent 60%);
     z-index: 2;
   }
   .about-avatar-label {
@@ -234,7 +296,7 @@
   }
   .about-ring {
     position: absolute; width: 320px; height: 320px; border-radius: 24px;
-    border: 1px solid rgba(37,99,235,.25); z-index: 0;
+    border: 1px solid rgba(139,92,246,.25); z-index: 0;
     animation: ringgrow 3s ease-in-out infinite alternate;
   }
   @keyframes ringgrow {
@@ -244,9 +306,15 @@
 
   .about-text p { color: var(--text-dim); line-height: 1.8; margin-bottom: 20px; }
 
+  .skills-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem; font-weight: 600;
+    color: var(--text); margin-top: 40px;
+    letter-spacing: -.2px;
+  }
   .skills-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 12px; margin-top: 32px;
+    gap: 12px; margin-top: 16px;
   }
   .skill-chip {
     background: var(--bg); border: 1px solid var(--border);
@@ -277,9 +345,9 @@
     display: flex; flex-direction: column;
   }
   .project-card:hover {
-    border-color: rgba(37,99,235,.5);
+    border-color: rgba(139,92,246,.5);
     transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0,0,0,.4), 0 0 0 1px rgba(37,99,235,.15);
+    box-shadow: 0 12px 40px rgba(0,0,0,.4), 0 0 0 1px rgba(139,92,246,.15);
   }
 
   .card-preview {
@@ -311,8 +379,8 @@
   .card-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
   .tag {
     font-size: .7rem; font-weight: 600; padding: 4px 10px; border-radius: 999px;
-    background: rgba(37,99,235,.12); color: var(--accent-light);
-    border: 1px solid rgba(37,99,235,.3);
+    background: rgba(139,92,246,.12); color: var(--accent-light);
+    border: 1px solid rgba(139,92,246,.3);
   }
 
   .card-title {
@@ -364,10 +432,10 @@
     left: -34px; top: 5px;
     width: 12px; height: 12px; border-radius: 50%;
     background: var(--bg); border: 2px solid var(--accent);
-    box-shadow: 0 0 0 4px rgba(37,99,235,.2);
+    box-shadow: 0 0 0 4px rgba(139,92,246,.2);
     transition: box-shadow .2s;
   }
-  .timeline-item:hover::before { box-shadow: 0 0 0 8px rgba(37,99,235,.15); }
+  .timeline-item:hover::before { box-shadow: 0 0 0 8px rgba(139,92,246,.15); }
 
   .timeline-date {
     font-size: .75rem; color: var(--accent-light); font-weight: 600;
@@ -398,7 +466,7 @@
 
   .contact-icon {
     width: 64px; height: 64px; border-radius: 16px;
-    background: rgba(37,99,235,.12); border: 1px solid rgba(37,99,235,.3);
+    background: rgba(139,92,246,.12); border: 1px solid rgba(139,92,246,.3);
     display: flex; align-items: center; justify-content: center;
     font-size: 1.8rem; margin: 0 auto 28px;
   }
@@ -567,9 +635,15 @@
 <!-- NAV -->
 <nav id="navbar">
   <a href="#inicio" class="nav-logo">Daniel <span>.</span> Carabali</a>
-  <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
-    <span></span><span></span><span></span>
-  </button>
+  <div class="nav-right">
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Cambiar tema claro/oscuro">
+      <svg class="theme-icon icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2.5 12H5M19 12h2.5M4.2 19.8 6 18M18 6l1.8-1.8"/></svg>
+      <svg class="theme-icon icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
   <ul class="nav-links" id="navLinks">
     <li><a href="#sobre">Sobre mí</a></li>
     <li><a href="#proyectos">Proyectos</a></li>
@@ -598,7 +672,25 @@
         Ver proyectos
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="#contacto" class="btn btn-ghost">Hablemos</a>
+      <a href="cv/Daniel_Carabali_CV.pdf" download class="btn btn-ghost">
+        Descargar CV
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+      </a>
+    </div>
+
+    <div class="hero-social">
+      <button type="button" class="hero-social-icon" onclick="copiarEmail(this)" aria-label="Copiar correo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        <span class="hero-social-tip cl-label">Copiar correo</span>
+      </button>
+      <a href="https://www.linkedin.com/in/daniel-carabali2004/" target="_blank" class="hero-social-icon" aria-label="LinkedIn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6Z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        <span class="hero-social-tip">LinkedIn</span>
+      </a>
+      <a href="https://github.com/carabalidani33-ctrl" target="_blank" class="hero-social-icon" aria-label="GitHub">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2-.2 4.5-1 4.5-4.5 0-1-.5-2-1-2.8.1-.5.5-1.8 0-3.5 0 0-1.4-.5-3 1-1.6-.5-3.4-.5-5 0-1.6-1.5-3-1-3-1-.5 1.7-.1 3-0 3.5-.5.8-1 1.8-1 2.8 0 3.5 2.5 4.3 4.5 4.5-.6.6-.6 1.2-.5 2V21"/></svg>
+        <span class="hero-social-tip">GitHub</span>
+      </a>
     </div>
     <div class="hero-stats">
       <div>
@@ -648,6 +740,7 @@
         aportando soluciones que generen impacto real en la toma de decisiones y la
         eficiencia organizacional.
       </p>
+      <h3 class="skills-title">Habilidades técnicas</h3>
       <div class="skills-grid">
         <div class="skill-chip"><span class="dot"></span>Power BI</div>
         <div class="skill-chip"><span class="dot"></span>DAX</div>
@@ -1139,9 +1232,13 @@
     const email = "carabalidani31@gmail.com";
     navigator.clipboard.writeText(email).then(() => {
       const label = btn.querySelector('.cl-label');
-      const originalText = label.textContent;
-      label.textContent = "¡Copiado!";
-      setTimeout(() => { label.textContent = originalText; }, 1800);
+      if (label) {
+        const originalText = label.textContent;
+        label.textContent = "¡Copiado!";
+        setTimeout(() => { label.textContent = originalText; }, 1800);
+      }
+      btn.classList.add('copiado');
+      setTimeout(() => btn.classList.remove('copiado'), 1800);
     });
   }
 
@@ -1156,6 +1253,31 @@
   const navLinks = document.getElementById('navLinks');
   navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
   navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+
+  // ── TEMA CLARO / OSCURO ──
+  const themeToggle = document.getElementById('themeToggle');
+  const root = document.documentElement;
+
+  function aplicarTema(tema) {
+    root.setAttribute('data-theme', tema);
+    try { localStorage.setItem('tema-preferido', tema); } catch (e) {}
+  }
+
+  let temaGuardado = null;
+  try { temaGuardado = localStorage.getItem('tema-preferido'); } catch (e) {}
+
+  if (temaGuardado) {
+    aplicarTema(temaGuardado);
+  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    aplicarTema('light');
+  } else {
+    aplicarTema('dark');
+  }
+
+  themeToggle.addEventListener('click', () => {
+    const actual = root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    aplicarTema(actual === 'light' ? 'dark' : 'light');
+  });
 
   // Scroll reveal
   const reveals = document.querySelectorAll('.reveal');
